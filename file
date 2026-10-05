@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SureWorks | Clean Business Tracking Solutions</title>
+  <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body style="font-family: 'Segoe UI', system-ui, sans-serif; background: radial-gradient(circle at top left, #f8fafc, #f1f5f9); padding: 0; margin: 0; color: #1e293b; display: flex; flex-direction: column; min-height: 100vh;">
+
+  <header style="width: 100%; background: white; border-bottom: 1px solid #e2e8f0; padding: 18px 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 22px; font-weight: 800; color: #0070f3; letter-spacing: -0.5px;">
+      SureWorks<span style="color: #10b981;">.</span>
+    </div>
+    <div style="font-size: 13px; color: #64748b; font-weight: 600; background: #f1f5f9; padding: 6px 14px; border-radius: 20px; border: 1px solid #e2e8f0;">
+      Secure Public Network
+    </div>
+  </header>
+
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 20px; box-sizing: border-box;">
+    <div style="max-width: 950px; width: 100%; display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; align-items: center; background: white; padding: 50px; border-radius: 28px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.04); border: 1px solid #e2e8f0; box-sizing: border-box;">
+      
+      <div>
+        <div style="display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+          Now Open for Local Service Pros
+        </div>
+        <h2 style="font-size: 32px; font-weight: 800; line-height: 1.2; color: #0f172a; margin: 0; letter-spacing: -0.8px;">
+          Keep 100% of the money your business earns.
+        </h2>
+        <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin-top: 15px; margin-bottom: 35px;">
+          Tired of losing your margin to messy group chats and expensive middleman bidding apps? SureWorks gives you a simple workspace to track, organize, and confirm your direct client workflows effortlessly.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 14px;">
+            <div style="background: #e6f4ea; color: #137333; padding: 8px; border-radius: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-top: 2px;"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div>
+              <strong style="color: #0f172a; font-size: 15px; display: block; font-weight: 700;">Zero Per-Lead Match Fees</strong>
+              <span style="color: #64748b; font-size: 13.5px; display: block; margin-top: 2px;">Say goodbye to buying shared phone numbers. Own your direct customer list.</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 14px;">
+            <div style="background: #e0f2fe; color: #0369a1; padding: 8px; border-radius: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-top: 2px;"><i class="fa-regular fa-bell"></i></div>
+            <div>
+              <strong style="color: #0f172a; font-size: 15px; display: block; font-weight: 700;">Instant Intake Delivery</strong>
+              <span style="color: #64748b; font-size: 13.5px; display: block; margin-top: 2px;">Incoming public client records transfer straight to your workspace inbox immediately.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 35px; border-radius: 20px; border: 1px solid #e2e8f0; box-sizing: border-box; width: 100%;">
+        <h3 style="margin-top: 0; font-size: 20px; color: #0f172a; font-weight: 700; margin-bottom: 6px;">Initialize Account</h3>
+        <p style="color: #64748b; font-size: 13.5px; margin-bottom: 24px; margin-top: 0;">Submit your details below to claim your private pipeline setup.</p>
+        
+        <div data-fs-success style="font-weight: 600; text-align: center; border-radius: 8px; font-size: 14px;"></div>
+        <div data-fs-error style="font-weight: 600; text-align: center; border-radius: 8px; font-size: 14px;"></div>
+
+        <form id="public-lead-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #475569; text-transform: uppercase;">Contact Email</label>
+            <input type="email" id="email" name="email" data-fs-field placeholder="name@company.com" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; color: #0f172a;" required />
+            <span data-fs-error="email"></span>
+          </div>
+          
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #475569; text-transform: uppercase;">Company Name</label>
+            <input type="text" id="business_name" name="business_name" data-fs-field placeholder="e.g. Acme Plumbing & Repair" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; color: #0f172a;" required />
+            <span data-fs-error="business_name"></span>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #475569; text-transform: uppercase;">Tracking Requirements</label>
+            <textarea id="message" name="message" data-fs-field placeholder="Tell us about your organization's business setup..." style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; height: 110px; resize: none; background: white; color: #0f172a; line-height: 1.5;" required></textarea>
+            <span data-fs-error="message"></span>
+          </div>
+
+          <button type="submit" data-fs-submit-btn style="background: #0070f3; color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; width: 100%; box-shadow: 0 4px 10px rgba(0, 112, 243, 0.2);">
+            Access Your Tracker Setup
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer style="width: 100%; text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; font-weight: 500; border-top: 1px solid #e2e8f0; background: #fff;">
+    &copy; 2026 SureWorks Pipeline Systems. All rights reserved.
+  </footer>
+
+  <script>
+    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+    formspree('initForm', { formElement: '#public-lead-form', formId: 'xoejqzaz' });
+  </script>
+  <script src="https://unpkg.com" defer></script>
+
+</body>
+</html>
