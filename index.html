@@ -176,10 +176,36 @@ element.classList.add("active");
 filterDirectory();
 }
 function renderCards(list) {
-var grid = document.getElementById("directory-grid");
-if (list.length === 0) {
-grid.innerHTML = 'No vetted matching profiles found.';
-return;
+  var grid = document.getElementById("directory-grid");
+  if (!grid) return;
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="no-results">No vetted matching profiles found under this filter.</div>';
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < list.length; i++) {
+    var current = list[i];
+    
+    // This adds a professional worker photo to replace the gray box!
+    var workerImg = "https://unsplash.com";
+    
+    html += '<div class="biz-card">' +
+            '<div style="display: flex; gap: 15px; align-items: start; margin-bottom: 15px;">' +
+            '  <img src="' + workerImg + '" alt="Worker" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; background: #cbd5e1;">' +
+            '  <div>' +
+            '    <h3 style="font-size:18px; margin-bottom:2px; padding-right:0;">' + (current.name || 'Verified Pro') + '</h3>' +
+            '    <span class="badge" style="position:static; display:inline-block; margin-top:4px;">VERIFIED PRO</span>' +
+            '    <p class="meta" style="margin-top:6px; margin-bottom:0;">' + (current.cat || '') + ' • ' + (current.loc || '') + '</p>' +
+            '  </div>' +
+            '</div>' +
+            '<p class="text">' + (current.text || '') + '</p>' +
+            '<div>' +
+            '<p class="stars">★ ★ ★ ★ ★ <span style="color:#64748b; font-weight:500;">(5.0)</span></p>' +
+            '<a href="javascript:void(0)" class="book-btn">Verified Direct Profile</a>' +
+            '</div>' +
+            '</div>';
+  }
+  grid.innerHTML = html;
 }
 var html = "";
 for (var i = 0; i < list.length; i++) {
