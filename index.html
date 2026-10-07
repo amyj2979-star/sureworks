@@ -195,18 +195,14 @@ html += '' +
 '';
 }
 <script>
-// Paste your secret Airtable shared link inside these quotation marks
-var databaseUrl = "https://airtable.com/appKmEwuVvHaPiBV5/shrAiv4dbq0WktnVm"; 
+// Your official Airtable shared CSV data feed link
+var databaseUrl = "https://airtable.com"; 
 
 var verifiedBusinesses = [];
 
 function loadData() {
-  if(!databaseUrl || databaseUrl.includes("YOUR_SHARED_LINK")) {
-    renderCards(verifiedBusinesses);
-    return;
-  }
-  
   var fetchUrl = databaseUrl;
+  // Convert standard shared link to a raw data feed link automatically
   if(fetchUrl.includes("/shr")) {
     fetchUrl = fetchUrl.replace("://airtable.com", "://airtable.comembed/") + "?format=csv";
   } else if (!fetchUrl.includes("format=csv")) {
@@ -220,8 +216,11 @@ function loadData() {
       var data = [];
       for (var i = 1; i < lines.length; i++) {
         if (!lines[i]) continue;
+        
+        // Split columns carefully by commas while ignoring commas inside quotation marks
         var matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(",");
         var cleanRow = matches.map(val => val.replace(/^"|"$/g, '').trim());
+        
         if(cleanRow.length >= 4) {
           data.push({
             name: cleanRow[0],
@@ -235,18 +234,32 @@ function loadData() {
       renderCards(verifiedBusinesses);
     })
     .catch(err => {
-      console.error("Error loading spreadsheet database:", err);
-      renderCards(verifiedBusinesses);
+      console.error("Error loading Airtable database:", err);
     });
 }
 
 var currentCategoryFilter = "All";
 
+// This function perfectly connects your top buttons to your spreadsheet data!
 function selectCategory(categoryName, element) {
   currentCategoryFilter = categoryName;
   var buttons = document.getElementsByClassName("filter-btn");
   for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove("active"); }
-  element.classList.add("active");
+  if(element) element.classList.add("active");
+  filterDirectory();
+}
+
+// Fallback function in case buttons are using filterCategory instead
+function filterCategory(categoryName) {
+  var buttons = document.getElementsByClassName("filter-btn");
+  for (var i = 0; i < buttons.length; i++) {
+    if(buttons[i].innerText.includes(categoryName) || (categoryName === 'All' && buttons[i].innerText.includes('All'))) {
+      currentCategoryFilter = categoryName;
+      buttons[i].classList.add("active");
+    } else {
+      buttons[i].classList.remove("active");
+    }
+  }
   filterDirectory();
 }
 
@@ -283,7 +296,7 @@ function filterDirectory() {
                         biz.cat.toLowerCase().includes(query) ||
                         biz.loc.toLowerCase().includes(query) ||
                         biz.text.toLowerCase().includes(query);
-    var matchesCategory = (currentCategoryFilter === "All" || biz.cat === currentCategoryFilter);
+    var matchesCategory = (currentCategoryFilter === "All" || biz.cat.toLowerCase() === currentCategoryFilter.toLowerCase());
     return matchesSearch && matchesCategory;
   });
   renderCards(filtered);
