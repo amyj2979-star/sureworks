@@ -195,21 +195,101 @@ html += '' +
 '';
 }
 <script>
-grid.innerHTML = html;
+// Paste your secret Airtable shared link inside these quotation marks
+var databaseUrl = "https://airtable.com/appKmEwuVvHaPiBV5/shrAiv4dbq0WktnVm"; 
+
+var verifiedBusinesses = [];
+
+function loadData() {
+  if(!databaseUrl || databaseUrl.includes("YOUR_SHARED_LINK")) {
+    renderCards(verifiedBusinesses);
+    return;
+  }
+  
+  var fetchUrl = databaseUrl;
+  if(fetchUrl.includes("/shr")) {
+    fetchUrl = fetchUrl.replace("://airtable.com", "://airtable.comembed/") + "?format=csv";
+  } else if (!fetchUrl.includes("format=csv")) {
+    fetchUrl = fetchUrl + (fetchUrl.includes("?") ? "&" : "?") + "format=csv";
+  }
+
+  fetch(fetchUrl)
+    .then(response => response.text())
+    .then(text => {
+      var lines = text.split("\n");
+      var data = [];
+      for (var i = 1; i < lines.length; i++) {
+        if (!lines[i]) continue;
+        var matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(",");
+        var cleanRow = matches.map(val => val.replace(/^"|"$/g, '').trim());
+        if(cleanRow.length >= 4) {
+          data.push({
+            name: cleanRow[0],
+            cat: cleanRow[1],
+            loc: cleanRow[2],
+            text: cleanRow[3]
+          });
+        }
+      }
+      verifiedBusinesses = data;
+      renderCards(verifiedBusinesses);
+    })
+    .catch(err => {
+      console.error("Error loading spreadsheet database:", err);
+      renderCards(verifiedBusinesses);
+    });
 }
+
+var currentCategoryFilter = "All";
+
+function selectCategory(categoryName, element) {
+  currentCategoryFilter = categoryName;
+  var buttons = document.getElementsByClassName("filter-btn");
+  for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove("active"); }
+  element.classList.add("active");
+  filterDirectory();
+}
+
+function renderCards(list) {
+  var grid = document.getElementById("directory-grid");
+  if (!grid) return;
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="no-results">No vetted matching profiles found under this filter.</div>';
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < list.length; i++) {
+    var current = list[i];
+    html += '<div class="biz-card">' +
+            '<div>' +
+            '<h3>' + current.name + '</h3>' +
+            '<span class="badge">VERIFIED PRO</span>' +
+            '<p class="meta">' + current.cat + ' • ' + current.loc + '</p>' +
+            '<p class="text">' + current.text + '</p>' +
+            '</div>' +
+            '<div>' +
+            '<p class="stars">★ ★ ★ ★ ★ <span style="color:#64748b; font-weight:500;">(5.0)</span></p>' +
+            '<a href="javascript:void(0)" class="book-btn">Verified Direct Profile</a>' +
+            '</div>' +
+            '</div>';
+  }
+  grid.innerHTML = html;
+}
+
 function filterDirectory() {
-var query = document.getElementById("directory-search").value.toLowerCase().trim();
-var filtered = verifiedBusinesses.filter(function(biz) {
-var matchesSearch = biz.name.toLowerCase().includes(query) ||
-biz.cat.toLowerCase().includes(query) ||
-biz.loc.toLowerCase().includes(query) ||
-biz.text.toLowerCase().includes(query);
-var matchesCategory = (currentCategoryFilter === "All" || biz.cat === currentCategoryFilter);
-return matchesSearch && matchesCategory;
-});
-renderCards(filtered);
+  var query = document.getElementById("directory-search").value.toLowerCase().trim();
+  var filtered = verifiedBusinesses.filter(function(biz) {
+    var matchesSearch = biz.name.toLowerCase().includes(query) ||
+                        biz.cat.toLowerCase().includes(query) ||
+                        biz.loc.toLowerCase().includes(query) ||
+                        biz.text.toLowerCase().includes(query);
+    var matchesCategory = (currentCategoryFilter === "All" || biz.cat === currentCategoryFilter);
+    return matchesSearch && matchesCategory;
+  });
+  renderCards(filtered);
 }
-window.onload = function() { renderCards(verifiedBusinesses); };
+
+window.onload = function() { loadData(); };
 </script>
 
 </body>
