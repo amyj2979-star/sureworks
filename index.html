@@ -147,107 +147,31 @@ All rights reserved.
 </footer>  
           
 <script>
-var verifiedBusinesses = [
-  {
-    name: "Way2HealthMD",
-    cat: "Medical",
-    loc: "NC",
-    text: "Lisa J. Broyles MD, CFMP. Functional Medicine consulting. Way2healthmd.com. Call direct at 828-749-0519 or email Lbroyles@way2health-md.com"
-  },
-{ name: "Apex Thermal Comfort", cat: "HVAC", loc: "Lawrenceville, GA", star: "4.9", reviews: "142", text: "Specializing in residential heating diagnostics, central air ventilation conditioning upgrades, and duct balance." },
-{ name: "Peachtree Plumbing & Rooter", cat: "Plumbing", loc: "Lawrenceville, GA", star: "4.9", reviews: "112", text: "Known for rapid emergency drain line routing, water pipe leak seals, and upfront flat pricing frameworks." },
-{ name: "Blue Ridge Equine Photography", cat: "Photographers", loc: "Tryon, NC", star: "4.9", reviews: "53", text: "Elite action sports coverage, landscape framing, agricultural listings, and commercial asset portfolios." },
-{ name: "Wildflower Artisan Confections", cat: "Bakers", loc: "Asheville, NC", star: "4.8", reviews: "96", text: "Premium bespoke event catering, luxury customized wedding cake modeling, and artisan pastries." },
-{ name: "Pro-Core Repair Specialists", cat: "Handyman", loc: "Gatlinburg, TN", star: "5.0", reviews: "78", text: "Trusted assembly installations, bracket mounting, interior patchwork, and household maintenance structures." },
-{ name: "Vanguard Electrical Systems", cat: "Electrical", loc: "Atlanta, GA", star: "4.9", reviews: "134", text: "Certified household master rewiring, circuit fusebox panel upgrades, and secure EV charger wireups." },
-{ name: "Thorne Legal Associates", cat: "Legal", loc: "Asheville, NC", star: "5.0", reviews: "41", text: "Professional contract drafting, small business counsel corporate tracking, and asset configuration support." },
-{ name: "Smoky Mountain Design Group", cat: "Remodeling", loc: "Gatlinburg, TN", star: "5.0", reviews: "84", text: "Vetted custom kitchen tile fits, luxury bath modernizations, cabin extensions, and wood deck restorations." },
-{ name: "Summit Ledger Advisors", cat: "CPAs", loc: "Atlanta, GA", star: "4.9", reviews: "62", text: "Strategic small business balance sheet reporting, corporate tax structuring, and personal deduction filing." },
-{ name: "GreenCorr Property Maintenance", cat: "Landscapers", loc: "Lawrenceville, GA", star: "4.8", reviews: "119", text: "Premium sod laying, seasonal weed control programs, tree maintenance, and architectural landscape frames." },
-{ name: "EcoWaste Disposal Solutions", cat: "Private Trash Pickup", loc: "Gatlinburg, TN", star: "4.9", reviews: "73", text: "Scheduled residential curb trash management, appliance logistics hauling, and estate disposal cleanup." },
-{ name: "NetGuard Cloud Infrastructure", cat: "IT", loc: "Asheville, NC", star: "5.0", reviews: "55", text: "On-site commercial office network wireups, emergency local database drive recovery, and backup management." }
-];
-var currentCategoryFilter = "All";
-function selectCategory(categoryName, element) {
-currentCategoryFilter = categoryName;
-var buttons = document.getElementsByClassName("filter-btn");
-for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove("active"); }
-element.classList.add("active");
-filterDirectory();
-}
-function renderCards(list) {
-  var grid = document.getElementById("directory-grid");
-  if (!grid) return;
-  if (list.length === 0) {
-    grid.innerHTML = '<div class="no-results">No vetted matching profiles found under this filter.</div>';
-    return;
-  }
-  var html = "";
-  for (var i = 0; i < list.length; i++) {
-    var current = list[i];
-    
-    // This adds a professional worker photo to replace the gray box!
-    var workerImg = "https://unsplash.com";
-    
-    html += '<div class="biz-card">' +
-            '<div style="display: flex; gap: 15px; align-items: start; margin-bottom: 15px;">' +
-            '  <img src="' + workerImg + '" alt="Worker" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; background: #cbd5e1;">' +
-            '  <div>' +
-            '    <h3 style="font-size:18px; margin-bottom:2px; padding-right:0;">' + (current.name || 'Verified Pro') + '</h3>' +
-            '    <span class="badge" style="position:static; display:inline-block; margin-top:4px;">VERIFIED PRO</span>' +
-            '    <p class="meta" style="margin-top:6px; margin-bottom:0;">' + (current.cat || '') + ' • ' + (current.loc || '') + '</p>' +
-            '  </div>' +
-            '</div>' +
-            '<p class="text">' + (current.text || '') + '</p>' +
-            '<div>' +
-            '<p class="stars">★ ★ ★ ★ ★ <span style="color:#64748b; font-weight:500;">(5.0)</span></p>' +
-            '<a href="javascript:void(0)" class="book-btn">Verified Direct Profile</a>' +
-            '</div>' +
-            '</div>';
-  }
-  grid.innerHTML = html;
-}
-var html = "";
-for (var i = 0; i < list.length; i++) {
-var current = list[i];
-html += '' +
-'' +
-'' +
-'' + current.name + '' +
-' VERIFIED PRO' +
-'' +
-'' + current.cat + ' •  ' + current.loc + '' +
-'' + current.text + '' +
-' ' + current.star + ' (' + current.reviews + ' Reviews)' +
-'' +
-'' +
-'Book Direct' +
-'' +
-'';
-}
-<script>
-// Paste your copied Google Sheet CSV link inside these quotation marks
 var databaseUrl = "https://google.com"; 
 
 var verifiedBusinesses = [];
 
 function loadData() {
-  if(!databaseUrl || databaseUrl.includes("GOOGLE_SHEET_CSV_LINK")) return;
+  if(!databaseUrl) return;
 
   fetch(databaseUrl)
     .then(response => response.text())
     .then(text => {
-      var lines = text.split("\n");
+      // Split spreadsheet data cleanly by lines, ignoring empty carriage breaks
+      var lines = text.split(/\r?\n/);
       var data = [];
+      
       for (var i = 1; i < lines.length; i++) {
-        if (!lines[i] || lines[i].trim() === "") continue;
+        var rowText = lines[i].trim();
+        if (!rowText) continue;
         
+        // Advanced row splitter isolates cells cleanly even with descriptive punctuation commas
         var cleanRow = [];
         var insideQuote = false;
         var currentCell = "";
         
-        for (var j = 0; j < lines[i].length; j++) {
-          var char = lines[i][j];
+        for (var j = 0; j < rowText.length; j++) {
+          var char = rowText[j];
           if (char === '"') {
             insideQuote = !insideQuote;
           } else if (char === ',' && !insideQuote) {
@@ -259,6 +183,7 @@ function loadData() {
         }
         cleanRow.push(currentCell.trim());
         
+        // Map elements cleanly to your visual directory cards
         if(cleanRow.length >= 4) {
           data.push({
             name: cleanRow[0].replace(/^"|"$/g, '').trim(),
@@ -271,7 +196,7 @@ function loadData() {
       verifiedBusinesses = data;
       renderCards(verifiedBusinesses);
     })
-    .catch(err => console.error("Error loading spreadsheet matrix:", err));
+    .catch(err => console.error("Error connecting to spreadsheet feed:", err));
 }
 
 var currentCategoryFilter = "All";
@@ -281,6 +206,19 @@ function selectCategory(categoryName, element) {
   var buttons = document.getElementsByClassName("filter-btn");
   for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove("active"); }
   if(element) element.classList.add("active");
+  filterDirectory();
+}
+
+function filterCategory(categoryName) {
+  var buttons = document.getElementsByClassName("filter-btn");
+  for (var i = 0; i < buttons.length; i++) {
+    if(buttons[i].innerText.toLowerCase().includes(categoryName.toLowerCase()) || (categoryName === 'All' && buttons[i].innerText.includes('All'))) {
+      currentCategoryFilter = categoryName;
+      buttons[i].classList.add("active");
+    } else {
+      buttons[i].classList.remove("active");
+    }
+  }
   filterDirectory();
 }
 
@@ -294,13 +232,20 @@ function renderCards(list) {
   var html = "";
   for (var i = 0; i < list.length; i++) {
     var current = list[i];
+    
+    // High-end default image element placeholder 
+    var workerImg = "https://unsplash.com";
+    
     html += '<div class="biz-card">' +
-            '<div>' +
-            '<h3>' + current.name + '</h3>' +
-            '<span class="badge">VERIFIED PRO</span>' +
-            '<p class="meta">' + current.cat + ' • ' + current.loc + '</p>' +
-            '<p class="text">' + current.text + '</p>' +
+            '<div style="display: flex; gap: 15px; align-items: start; margin-bottom: 15px;">' +
+            '  <img src="' + workerImg + '" alt="Worker" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; background: #cbd5e1;">' +
+            '  <div>' +
+            '    <h3 style="font-size:18px; margin-bottom:2px; padding-right:0; font-weight:700;">' + current.name + '</h3>' +
+            '    <span class="badge" style="position:static; display:inline-block; margin-top:4px;">VERIFIED PRO</span>' +
+            '    <p class="meta" style="margin-top:6px; margin-bottom:0;">' + current.cat + ' • ' + current.loc + '</p>' +
+            '  </div>' +
             '</div>' +
+            '<p class="text">' + current.text + '</p>' +
             '<div>' +
             '<p class="stars">★ ★ ★ ★ ★ <span style="color:#64748b; font-weight:500;">(5.0)</span></p>' +
             '<a href="javascript:void(0)" class="book-btn">Verified Direct Profile</a>' +
