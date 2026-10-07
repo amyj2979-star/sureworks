@@ -183,10 +183,10 @@ function loadData() {
         
         if(cleanRow.length >= 4) {
           data.push({
-            name: cleanRow[0].replace(/^"|"$/g, '').trim(),
-            cat: cleanRow[1].replace(/^"|"$/g, '').trim(),
-            loc: cleanRow[2].replace(/^"|"$/g, '').trim(),
-            text: cleanRow[3].replace(/^"|"$/g, '').trim()
+            name: (cleanRow[0] || "").replace(/^"|"$/g, '').trim(),
+            cat: (cleanRow[1] || "").replace(/^"|"$/g, '').trim(),
+            loc: (cleanRow[2] || "").replace(/^"|"$/g, '').trim(),
+            text: (cleanRow[3] || "").replace(/^"|"$/g, '').trim()
           });
         }
       }
