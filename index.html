@@ -157,7 +157,6 @@ function loadData() {
   fetch(databaseUrl)
     .then(response => response.text())
     .then(text => {
-      // Split spreadsheet data cleanly by lines, ignoring empty carriage breaks
       var lines = text.split(/\r?\n/);
       var data = [];
       
@@ -165,7 +164,6 @@ function loadData() {
         var rowText = lines[i].trim();
         if (!rowText) continue;
         
-        // Advanced row splitter isolates cells cleanly even with descriptive punctuation commas
         var cleanRow = [];
         var insideQuote = false;
         var currentCell = "";
@@ -183,7 +181,6 @@ function loadData() {
         }
         cleanRow.push(currentCell.trim());
         
-        // Map elements cleanly to your visual directory cards
         if(cleanRow.length >= 4) {
           data.push({
             name: cleanRow[0].replace(/^"|"$/g, '').trim(),
@@ -212,7 +209,8 @@ function selectCategory(categoryName, element) {
 function filterCategory(categoryName) {
   var buttons = document.getElementsByClassName("filter-btn");
   for (var i = 0; i < buttons.length; i++) {
-    if(buttons[i].innerText.toLowerCase().includes(categoryName.toLowerCase()) || (categoryName === 'All' && buttons[i].innerText.includes('All'))) {
+    var btnText = buttons[i].innerText.toLowerCase();
+    if(btnText.includes(categoryName.toLowerCase()) || (categoryName === 'All' && btnText.includes('all'))) {
       currentCategoryFilter = categoryName;
       buttons[i].classList.add("active");
     } else {
@@ -232,8 +230,6 @@ function renderCards(list) {
   var html = "";
   for (var i = 0; i < list.length; i++) {
     var current = list[i];
-    
-    // High-end default image element placeholder 
     var workerImg = "https://unsplash.com";
     
     html += '<div class="biz-card">' +
@@ -262,7 +258,7 @@ function filterDirectory() {
                         biz.cat.toLowerCase().includes(query) ||
                         biz.loc.toLowerCase().includes(query) ||
                         biz.text.toLowerCase().includes(query);
-    var matchesCategory = (currentCategoryFilter === "All" || biz.cat.toLowerCase() === currentCategoryFilter.toLowerCase());
+    var matchesCategory = (currentCategoryFilter === "All" || biz.cat.toLowerCase().includes(currentCategoryFilter.toLowerCase()) || currentCategoryFilter.toLowerCase().includes(biz.cat.toLowerCase()));
     return matchesSearch && matchesCategory;
   });
   renderCards(filtered);
