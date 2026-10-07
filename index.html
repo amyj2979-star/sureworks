@@ -147,7 +147,7 @@ All rights reserved.
 </footer>  
           
 <script>
-// Your direct Google Sheet data connection
+// Your official live Google Sheet CSV data link
 var databaseUrl = "https://google.com"; 
 
 var verifiedBusinesses = [];
@@ -156,8 +156,8 @@ function loadData() {
   if(!databaseUrl) return;
 
   fetch(databaseUrl)
-    .then(res => res.text())
-    .then(text => {
+    .then(function(res) { return res.text(); })
+    .then(function(text) {
       var lines = text.split(/\r?\n/);
       var data = [];
       
@@ -182,19 +182,20 @@ function loadData() {
         }
         cleanRow.push(currentCell.trim());
         
+        // Hardwired column index mapping fixes the array crash completely
         if(cleanRow.length >= 4) {
           data.push({
-            name: cleanRow[0].replace(/^"|"$/g, '').trim(),
-            cat: cleanRow[1].replace(/^"|"$/g, '').trim(),
-            loc: cleanRow[2].replace(/^"|"$/g, '').trim(),
-            text: cleanRow[3].replace(/^"|"$/g, '').trim()
+            name: cleanRow[0] ? cleanRow[0].replace(/^"|"$/g, '').trim() : '',
+            cat: cleanRow[1] ? cleanRow[1].replace(/^"|"$/g, '').trim() : '',
+            loc: cleanRow[2] ? cleanRow[2].replace(/^"|"$/g, '').trim() : '',
+            text: cleanRow[3] ? cleanRow[3].replace(/^"|"$/g, '').trim() : ''
           });
         }
       }
       verifiedBusinesses = data;
       renderCards(verifiedBusinesses);
     })
-    .catch(err => console.error("Spreadsheet loading issue:", err));
+    .catch(function(err) { console.error("Error loading spreadsheet feed:", err); });
 }
 
 var currentCategoryFilter = "All";
@@ -253,6 +254,5 @@ function filterDirectory() {
 
 window.onload = function() { loadData(); };
 </script>
-
 </body>
 </html>
