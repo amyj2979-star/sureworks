@@ -76,6 +76,11 @@
       <button class="filter-btn" onclick="selectCategory('Private Trash Pickup', this)"><i class="fa-solid fa-trash-can" style="color: #475569;"></i> Private Trash Pickup</button>
       <button class="filter-btn" onclick="selectCategory('IT', this)"><i class="fa-solid fa-laptop-code" style="color: #6366f1;"></i> IT</button>
       <button class="filter-btn" onclick="selectCategory('Medical', this)">Medical & Wellness</button>
+      <button class="filter-btn" onclick="selectCategory('Real Estate', this)">Real Estate</button>
+      <button class="filter-btn" onclick="selectCategory('Cleaning Services', this)">Cleaning Services</button>
+      <button class="filter-btn" onclick="selectCategory('Mechanics', this)">Mechanics</button>
+      <button class="filter-btn" onclick="selectCategory('Home Remodeling', this)">Home Remodeling</button>
+      <button class="filter-btn" onclick="selectCategory('Groomers', this)">Groomers</button>
     </div>
     
 
@@ -195,71 +200,61 @@ html += '' +
 '';
 }
 <script>
-// Your official Airtable shared CSV data feed link
-var databaseUrl = "https://airtable.com"; 
+// Paste your copied Google Sheet CSV link inside these quotation marks
+var databaseUrl = "https://google.com"; 
 
 var verifiedBusinesses = [];
 
 function loadData() {
-  var fetchUrl = databaseUrl;
-  // Convert standard shared link to a raw data feed link automatically
-  if(fetchUrl.includes("/shr")) {
-    fetchUrl = fetchUrl.replace("://airtable.com", "://airtable.comembed/") + "?format=csv";
-  } else if (!fetchUrl.includes("format=csv")) {
-    fetchUrl = fetchUrl + (fetchUrl.includes("?") ? "&" : "?") + "format=csv";
-  }
+  if(!databaseUrl || databaseUrl.includes("GOOGLE_SHEET_CSV_LINK")) return;
 
-  fetch(fetchUrl)
+  fetch(databaseUrl)
     .then(response => response.text())
     .then(text => {
       var lines = text.split("\n");
       var data = [];
       for (var i = 1; i < lines.length; i++) {
-        if (!lines[i]) continue;
+        if (!lines[i] || lines[i].trim() === "") continue;
         
-        // Split columns carefully by commas while ignoring commas inside quotation marks
-        var matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(",");
-        var cleanRow = matches.map(val => val.replace(/^"|"$/g, '').trim());
+        var cleanRow = [];
+        var insideQuote = false;
+        var currentCell = "";
+        
+        for (var j = 0; j < lines[i].length; j++) {
+          var char = lines[i][j];
+          if (char === '"') {
+            insideQuote = !insideQuote;
+          } else if (char === ',' && !insideQuote) {
+            cleanRow.push(currentCell.trim());
+            currentCell = "";
+          } else {
+            currentCell += char;
+          }
+        }
+        cleanRow.push(currentCell.trim());
         
         if(cleanRow.length >= 4) {
           data.push({
-            name: cleanRow[0],
-            cat: cleanRow[1],
-            loc: cleanRow[2],
-            text: cleanRow[3]
+            name: cleanRow[0].replace(/^"|"$/g, '').trim(),
+            cat: cleanRow[1].replace(/^"|"$/g, '').trim(),
+            loc: cleanRow[2].replace(/^"|"$/g, '').trim(),
+            text: cleanRow[3].replace(/^"|"$/g, '').trim()
           });
         }
       }
       verifiedBusinesses = data;
       renderCards(verifiedBusinesses);
     })
-    .catch(err => {
-      console.error("Error loading Airtable database:", err);
-    });
+    .catch(err => console.error("Error loading spreadsheet matrix:", err));
 }
 
 var currentCategoryFilter = "All";
 
-// This function perfectly connects your top buttons to your spreadsheet data!
 function selectCategory(categoryName, element) {
   currentCategoryFilter = categoryName;
   var buttons = document.getElementsByClassName("filter-btn");
   for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove("active"); }
   if(element) element.classList.add("active");
-  filterDirectory();
-}
-
-// Fallback function in case buttons are using filterCategory instead
-function filterCategory(categoryName) {
-  var buttons = document.getElementsByClassName("filter-btn");
-  for (var i = 0; i < buttons.length; i++) {
-    if(buttons[i].innerText.includes(categoryName) || (categoryName === 'All' && buttons[i].innerText.includes('All'))) {
-      currentCategoryFilter = categoryName;
-      buttons[i].classList.add("active");
-    } else {
-      buttons[i].classList.remove("active");
-    }
-  }
   filterDirectory();
 }
 
